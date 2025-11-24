@@ -11,24 +11,27 @@ def e_email(email):
 
 
 class Student:
+    def __init__(self, name, phone, age, email):
+        self.name = name
+        self.phone = phone
+        self.age = age
+        self.email = email
 
-    def __init__(self,name,phone,age,email):
-        self.name=name
-        self.phone=phone
-        self.age=age
-        self.email=email
 
 class Group:
-    def __init__(self,title,profession):
-        self.title=title
-        self.profession=profession
-        self.students=[]
+    def __init__(self, title, profession):
+        self.title = title
+        self.profession = profession
+        self.students = []
+
+    def __str__(self):
+        return f"title:{self.title}, profession:{self.profession}"
 
     def add_students(self):
-        name=input("name:")
-        phone=input("phone:")
-        age=input("age:")
-        email=input("email:")
+        name = input("name:")
+        phone = input("phone:")
+        age = input("age:")
+        email = input("email:")
 
         if not n_name(name):
             print("name xato , faqat harf bo'lishi kerak")
@@ -40,7 +43,7 @@ class Group:
             print("email noto'g'ri")
             return
 
-        student=Student(name,phone,age,email)
+        student = Student(name, phone, age, email)
         self.students.append(student)
         print("student qo'shildi")
 
@@ -49,34 +52,36 @@ class Group:
             print("student yoq")
             return
 
-        for i,item in enumerate(self.students,start=1):
+        for i, item in enumerate(self.students, start=1):
             print(f"{i}. name:{item.name}, phone:{item.phone}, age:{item.age}, email:{item.email}")
 
     def update_student(self):
-        name=input("tahrirlanadigan ism:")
+        name = input("tahrirlanadigan ism:")
 
         for i in self.students:
-            if i.name==name:
+            if i.name == name:
                 print("1.ismni o'zgartirish")
                 print("2.telefon nomerni o'zgartirish")
                 print("3.yoshni o'zgartirish")
                 print("4.emailni o'zgartirish")
 
-                tanlang=input("tanlang:")
+                tanlang = input("tanlang:")
 
-                if tanlang=="1":
-                    i.name=input("yangi ism:")
-                elif tanlang=="2":
-                    i.phone=input("yangi telefon raqam:")
-                elif tanlang=="3":
-                    i.age=input("yoshini kiriting:")
-                elif tanlang=="4":
-                    i.email=input("yangi email ni kiriting:")
+                if tanlang == "1":
+                    i.name = input("yangi ism:")
+                elif tanlang == "2":
+                    i.phone = input("yangi telefon raqam:")
+                elif tanlang == "3":
+                    i.age = input("yoshini kiriting:")
+                elif tanlang == "4":
+                    i.email = input("yangi email:")
                 else:
                     print("noto'g'ri tanlov")
                     return
+
                 print("student tahrirlandi")
                 return
+
         print("bunday ismli student topilmadi")
 
     def delete_student(self):
@@ -90,17 +95,27 @@ class Group:
 
         print("bunday student yo'q")
 
+    def update_group(self):
+        new_title = input("yangi title : ")
+        new_profession = input("yangi profession : ")
+
+        if new_title:
+            self.title = new_title
+        if new_profession:
+            self.profession = new_profession
+
+        print("Guruh yangilandi!")
 
 
 class OTM:
-    def __init__(self,title):
-        self.title=title
-        self.groups=[]
+    def __init__(self, title):
+        self.title = title
+        self.groups = []
 
     def add_group(self):
-        title=input("title:")
-        profession=input("profession:")
-        group=Group(title,profession)
+        title = input("title:")
+        profession = input("profession:")
+        group = Group(title, profession)
         self.groups.append(group)
         print("guruh qo'shildi")
 
@@ -109,18 +124,30 @@ class OTM:
             print("guruh yoq")
             return
 
-        for i,item in enumerate(self.groups,start=1):
-            print(f"{i}. title:{item.title}, profession:{item.profession}")
+        for i, item in enumerate(self.groups, start=1):
+            print(f"{i}. {item}")
+
+    def delete_group(self):
+        self.view_groups()
+
+        if not self.groups:
+            return
+
+        index = int(input("o'chiriladigan guruh id: "))
+        if 1 <= index <= len(self.groups):
+            deleted_group = self.groups.pop(index - 1)
+            print(f"{deleted_group.title} guruhi o'chirildi (studentlari bilan birga)")
+        else:
+            print("noto'g'ri id")
 
 
 class ERP:
     def __init__(self):
-        self.title='ERP'
-        self.otms=[]
+        self.otms = []
 
     def add_otm(self):
-        title=input("title:")
-        otm=OTM(title)
+        title = input("title:")
+        otm = OTM(title)
         self.otms.append(otm)
         print("OTM qo'shildi")
 
@@ -128,22 +155,23 @@ class ERP:
         if not self.otms:
             print("OTM lar yoq")
             return
-        for i,item in enumerate(self.otms,start=1):
+        for i, item in enumerate(self.otms, start=1):
             print(f"{i}. {item.title}")
 
-erp=ERP()
+
+erp = ERP()
 
 def group_manager(group: Group):
     while True:
-        kod=input(" 1.add student \n 2.view students \n 3.update student \n 4.delete student \n 5.back \n :")
+        kod = input(" 1.add student \n 2.view students \n 3.update student \n 4.delete student \n 5.back \n :")
 
-        if kod=="1":
+        if kod == "1":
             group.add_students()
-        elif kod=="2":
+        elif kod == "2":
             group.view_students()
-        elif kod=="3":
+        elif kod == "3":
             group.update_student()
-        elif kod=="4":
+        elif kod == "4":
             group.delete_student()
         else:
             break
@@ -151,19 +179,39 @@ def group_manager(group: Group):
 
 def otm_manager(otm: OTM):
     while True:
-        kod=input(" 1.add group \n 2.view groups \n 3.group detail \n 4.back \n : ")
+        kod = input(
+            " 1.add group \n"
+            " 2.view groups \n"
+            " 3.group detail \n"
+            " 4.update group \n"
+            " 5.delete group \n"
+            " 6.back \n : "
+        )
 
-        if kod=="1":
+        if kod == "1":
             otm.add_group()
-        elif kod=="2":
+
+        elif kod == "2":
             otm.view_groups()
-        elif kod=="3":
+
+        elif kod == "3":
             otm.view_groups()
-            index=int(input("group_id:"))
-            group=otm.groups[index-1]
+            index = int(input("group_id:"))
+            group = otm.groups[index - 1]
             group_manager(group)
+
+        elif kod == "4":
+            otm.view_groups()
+            index = int(input("update qilinadigan group id: "))
+            group = otm.groups[index - 1]
+            group.update_group()
+
+        elif kod == "5":
+            otm.delete_group()
+
         else:
             break
+
 
 def erp_manager(ep: ERP):
     while True:
